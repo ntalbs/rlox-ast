@@ -3,6 +3,8 @@ use std::io::{stdin, stdout, Write};
 use std::process::exit;
 use std::{env, io};
 
+mod token;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -43,4 +45,12 @@ fn run_prompt() -> io::Result<()> {
 
 fn run(source: String) {
     println!("Not yet, Just print: {source}");
+}
+
+fn error(line: usize, message: &str) {
+    report(line, "", message);
+}
+
+fn report(line: usize, at: &str, message: &str) {
+    eprintln!("[line {line} ] Error {at}: {message}");
 }
