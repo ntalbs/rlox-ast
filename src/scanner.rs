@@ -1,6 +1,6 @@
 use std::{iter::Peekable, str::Chars};
 
-use crate::token::{Pos, Token};
+use crate::token::{keyword, Pos, Token};
 
 pub(crate) struct Scanner<'a> {
     source: &'a str,
@@ -153,6 +153,29 @@ impl<'a> Scanner<'a> {
             } else {
                 break;
             }
+        }
+    }
+
+    fn keyword_or_identifier(&mut self) -> Token {
+        self.alphanumeric();
+        let lexeme = &self.source[self.start..self.current];
+
+        match keyword(lexeme, self.pos) {
+            Some(token) => token,
+            None => Token::Identifier {
+                lexeme: lexeme.to_string(),
+                pos: self.pos,
+            },
+        }
+    }
+
+    fn alphanumeric(&mut self) {
+        // consume alphanumeric
+        while let Some(&c) = self.peek() {
+            if !c.is_alphanumeric() {
+                break;
+            }
+            self.advance();
         }
     }
 
