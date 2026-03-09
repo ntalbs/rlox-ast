@@ -95,11 +95,32 @@ impl<'a> Scanner<'a> {
                     continue;
                 }
                 // string literal
+                '"' => self.string(),
                 // number literal
                 // reserved words
                 // identifiers
                 _ => panic!("Unknown character"),
             };
+        }
+    }
+
+    fn string(&mut self) -> Token {
+        while self.peek() != Some(&'"') && !self.is_at_end() {
+            if self.peek() == Some(&'\n') {
+                self.pos.line += 1;
+            }
+            self.advance();
+        }
+        if self.is_at_end() {
+            panic!("{}: Unterminated string.", self.pos.line);
+        }
+
+        self.advance();
+        let lexeme = &self.source[(self.start + 1)..(self.current - 1)];
+
+        Token::String {
+            lexeme: lexeme.to_string(),
+            pos: self.pos,
         }
     }
 
