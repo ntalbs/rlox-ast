@@ -89,17 +89,17 @@ impl<'a> Scanner<'a> {
                     }
                 }
                 ' ' | '\r' | '\t' => {
-                    self.advance();
-                    self.start += 1;
+                    self.start = self.current;
                     continue;
-                },
+                }
                 '\n' => {
                     self.pos.line += 1;
                     self.pos.col = 0;
                     continue;
                 }
                 '"' => self.string(),
-                '0'..'9' => self.number(),
+                '0'..='9' => self.number(),
+                'a'..='z' => self.keyword_or_identifier(),
                 // reserved words
                 // identifiers
                 _ => panic!("Unknown character"),
