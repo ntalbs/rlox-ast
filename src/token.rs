@@ -29,7 +29,7 @@ pub(crate) enum Token {
 
     Identifier { lexeme: String, pos: Pos },
     String { lexeme: String, pos: Pos },
-    Number { lexeme: String, pos: Pos },
+    Number { lexeme: String, val: f64, pos: Pos },
     And(Pos),
     Class(Pos),
     Else(Pos),

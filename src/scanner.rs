@@ -88,15 +88,18 @@ impl<'a> Scanner<'a> {
                         Token::Slash(self.pos)
                     }
                 }
-                ' ' | '\r' | '\t' => continue,
+                ' ' | '\r' | '\t' => {
+                    self.advance();
+                    self.start += 1;
+                    continue;
+                },
                 '\n' => {
                     self.pos.line += 1;
                     self.pos.col = 0;
                     continue;
                 }
-                // string literal
                 '"' => self.string(),
-                // number literal
+                '0'..'9' => self.number(),
                 // reserved words
                 // identifiers
                 _ => panic!("Unknown character"),
@@ -121,6 +124,35 @@ impl<'a> Scanner<'a> {
         Token::String {
             lexeme: lexeme.to_string(),
             pos: self.pos,
+        }
+    }
+
+    fn number(&mut self) -> Token {
+        self.digits();
+
+        if self.matches('.') {
+            self.advance();
+            self.digits();
+        }
+
+        let lexeme = self.source[self.start..self.current].to_string();
+        let val = lexeme.parse::<f64>().unwrap();
+
+        Token::Number {
+            lexeme,
+            val,
+            pos: self.pos,
+        }
+    }
+
+    fn digits(&mut self) {
+        // consume digits
+        while let Some(&c) = self.peek() {
+            if c.is_ascii_digit() {
+                self.advance();
+            } else {
+                break;
+            }
         }
     }
 
