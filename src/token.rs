@@ -1,9 +1,10 @@
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub(crate) struct Pos {
-  pub line: usize,
-  pub col: usize,
+    pub line: usize,
+    pub col: usize,
 }
 
+#[derive(Debug, PartialEq)]
 pub(crate) enum Token {
     LeftParen(Pos),
     RightParen(Pos),
@@ -26,18 +27,9 @@ pub(crate) enum Token {
     Less(Pos),
     LessEqual(Pos),
 
-    Identifier {
-      lexeme: String,
-      pos: Pos,
-    },
-    String {
-      lexeme: String,
-      pos: Pos,
-    },
-    Number {
-      lexeme: String,
-      pos: Pos,
-    },
+    Identifier { lexeme: String, pos: Pos },
+    String { lexeme: String, pos: Pos },
+    Number { lexeme: String, pos: Pos },
     And(Pos),
     Class(Pos),
     Else(Pos),
