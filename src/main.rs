@@ -3,6 +3,9 @@ use std::io::{stdin, stdout, Write};
 use std::process::exit;
 use std::{env, io};
 
+use crate::scanner::Scanner;
+
+mod scanner;
 mod token;
 
 fn main() {
@@ -31,20 +34,16 @@ fn run_prompt() -> io::Result<()> {
 
         let mut line = String::new();
         stdin().read_line(&mut line)?;
-
-        match line.chars().next() {
-            None => {
-                println!();
-                return Ok(());
-            }
-            Some('\n') => eprintln!("Ctrl-C or Ctrl-D to quit.\n"),
-            Some(_) => println!("{line}"),
-        }
+        run(line);
     }
 }
 
 fn run(source: String) {
-    println!("Not yet, Just print: {source}");
+    let mut scanner = Scanner::new(&source);
+    let tokens = scanner.scan();
+    for t in tokens {
+        println!("{t:?}");
+    }
 }
 
 fn error(line: usize, message: &str) {
