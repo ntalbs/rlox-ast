@@ -3,10 +3,12 @@ use std::io::{stdin, stdout, Write};
 use std::process::exit;
 use std::{env, io};
 
+use crate::parser::Parser;
 use crate::scanner::Scanner;
 
-mod scanner;
 mod token;
+mod scanner;
+mod parser;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -41,9 +43,13 @@ fn run_prompt() -> io::Result<()> {
 fn run(source: String) {
     let mut scanner = Scanner::new(&source);
     let tokens = scanner.scan();
-    for t in tokens {
+    for t in &tokens {
         println!("{t:?}");
     }
+
+    let mut parser = Parser::new(tokens);
+    let expr = parser.parse();
+    println!("Expr: {expr:?}");
 }
 
 fn error(line: usize, message: &str) {

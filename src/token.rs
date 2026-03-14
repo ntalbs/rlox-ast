@@ -4,7 +4,7 @@ pub(crate) struct Pos {
     pub col: usize,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub(crate) enum Token {
     LeftParen(Pos),
     RightParen(Pos),
